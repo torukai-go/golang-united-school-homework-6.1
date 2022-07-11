@@ -18,10 +18,12 @@ func NewBox(shapesCapacity int) *box {
 // AddShape adds shape to the box
 // returns the error in case it goes out of the shapesCapacity range.
 func (b *box) AddShape(shape Shape) error {
-	b.shapes = append(b.shapes, shape)
+
 	if len(b.shapes) >= b.shapesCapacity {
 		return fmt.Errorf("box capacity has been exceeded")
 	}
+
+	b.shapes = append(b.shapes, shape)
 	return nil
 }
 
@@ -29,15 +31,17 @@ func (b *box) AddShape(shape Shape) error {
 // whether shape by index doesn't exist or index went out of the range, then it returns an error
 func (b *box) GetByIndex(i int) (Shape, error) {
 
-	if i > b.shapesCapacity {
+	if i > len(b.shapes) {
 		return nil, fmt.Errorf("index is out of range")
 	}
 
-	if b.shapes[i] == nil {
+	tempShape := b.shapes[i]
+
+	if tempShape == nil {
 		return nil, fmt.Errorf("shape doesn't exist")
 	}
 
-	return b.shapes[i], nil
+	return tempShape, nil
 }
 
 // ExtractByIndex allows getting shape by index and removes this shape from the list.
@@ -103,19 +107,23 @@ func (b *box) SumArea() float64 {
 // whether circles are not exist in the list, then returns an error
 func (b *box) RemoveAllCircles() error {
 
-	var trianglesExist bool = false
+	var circlesExist bool = false
+	newShapes := make([]Shape, 0)
 
 	for _, shape := range b.shapes {
-		_, ok := shape.(Triangle)
+		_, ok := shape.(*Circle)
 
 		if ok {
-			trianglesExist = true
-			shape = nil
+			circlesExist = true
+		} else {
+			newShapes = append(newShapes, shape)
 		}
 	}
 
-	if !trianglesExist {
-		return fmt.Errorf("There are no triangles in the box")
+	b.shapes = newShapes
+
+	if !circlesExist {
+		return fmt.Errorf("there are no circles in the box")
 	}
 
 	return nil
