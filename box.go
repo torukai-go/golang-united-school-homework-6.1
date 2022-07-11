@@ -1,6 +1,5 @@
 package golang_united_school_homework
 
-
 // box contains list of shapes and able to perform operations on them
 type box struct {
 	shapes         []Shape
