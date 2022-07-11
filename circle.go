@@ -5,7 +5,6 @@ import "math"
 // Circle must satisfy to Shape interface
 type Circle struct {
 	Radius float64
-	Shape
 }
 
 func (c Circle) CalcPerimeter() float64 {
